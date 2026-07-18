@@ -149,6 +149,18 @@ body {
   white-space: nowrap;
 }
 
+.header-version {
+  background: rgba(59, 116, 245, 0.12);
+  border: 1px solid rgba(59, 116, 245, 0.3);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--blue-glow);
+  white-space: nowrap;
+}
+
 /* ── MAIN CONTENT ──────────────────────────────────────────── */
 .app-main {
   padding-top: var(--header-h);
@@ -505,6 +517,11 @@ body {
   height: 320px; /* Aumentado para evitar que o texto grande no verso vaze para os botões */
   perspective: 1000px;
   cursor: pointer;
+  /* Mobile: elimina delay de 300ms e evita seleção de texto no swipe */
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .flashcard {

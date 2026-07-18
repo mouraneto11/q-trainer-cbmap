@@ -3,6 +3,9 @@
 // Vanilla JS puro — sem dependências externas
 // ============================================================
 
+// ── VERSÃO DO APP ────────────────────────────────────────────
+const APP_VERSION = '1.1.0'; // ← atualizar a cada deploy
+
 // ── BANCO DE DADOS DOS CÓDIGOS Q ────────────────────────────
 const codigoQ = [
   { codigo: "QAP", significado: "Na escuta / Pronto para copiar",        uso: "Usado para indicar que a estação está na escuta e pronta para receber mensagens. Ex: 'QAP — Central, aguardando comunicação.'" },
@@ -94,9 +97,12 @@ if ('serviceWorker' in navigator) {
 }
 
 // ── GERAÇÃO DINÂMICA DE ÍCONES (via Canvas) ─────────────────
-// Gera ícones SVG inline para o manifest sem precisar de arquivos externos
+// Gera ícones via Canvas e injeta no manifest como blob URL
+// para que o browser possa validar o PWA e mostrar o banner de instalação
 function generateIcons() {
   const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+  const iconDataURLs = {};
+
   sizes.forEach((size) => {
     const canvas = document.createElement('canvas');
     canvas.width = size;
@@ -124,16 +130,54 @@ function generateIcons() {
     ctx.textBaseline = 'middle';
     ctx.fillText('Q', size / 2, size / 2 + size * 0.02);
 
-    // Exportar como PNG e criar link fictício para o manifest
-    // (O manifest já referencia os paths — no PWA real, usar arquivos reais)
-    // Aqui usamos para apple-touch-icon e favicon embutido
+    const dataURL = canvas.toDataURL('image/png');
+    iconDataURLs[size] = dataURL;
+
+    // Apple touch icon e favicon
     if (size === 192) {
       const link = document.querySelector("link[rel='apple-touch-icon']");
-      if (link) link.href = canvas.toDataURL('image/png');
+      if (link) link.href = dataURL;
       const favicon = document.querySelector("link[rel='icon']");
-      if (favicon) favicon.href = canvas.toDataURL('image/png');
+      if (favicon) favicon.href = dataURL;
     }
   });
+
+  // Recriar o manifest com ícones em data URL e injetá-lo como blob
+  // Isso permite que o browser valide os ícones e ofereça instalação PWA
+  patchManifestWithIcons(iconDataURLs);
+}
+
+function patchManifestWithIcons(iconDataURLs) {
+  const manifestData = {
+    name: 'Q-Trainer CBMAP - 5º PEL APH',
+    short_name: 'Q-Trainer',
+    description: 'Treinamento do Código Q para o 5º Pelotão APH - CFSD 2026.2 CBMAP',
+    start_url: './',
+    display: 'standalone',
+    background_color: '#0a1628',
+    theme_color: '#0a1628',
+    orientation: 'portrait',
+    lang: 'pt-BR',
+    icons: Object.entries(iconDataURLs).map(([size, src]) => ({
+      src,
+      sizes: `${size}x${size}`,
+      type: 'image/png',
+      purpose: size >= 192 ? 'maskable any' : 'any',
+    })),
+    categories: ['education', 'utilities'],
+  };
+
+  const blob = new Blob([JSON.stringify(manifestData)], { type: 'application/manifest+json' });
+  const blobURL = URL.createObjectURL(blob);
+
+  // Substituir o link do manifest
+  let manifestLink = document.querySelector("link[rel='manifest']");
+  if (!manifestLink) {
+    manifestLink = document.createElement('link');
+    manifestLink.rel = 'manifest';
+    document.head.appendChild(manifestLink);
+  }
+  manifestLink.href = blobURL;
 }
 
 function roundRect(ctx, x, y, w, h, r) {
@@ -371,20 +415,64 @@ function initFlashcards() {
   const card    = $('#flashcard');
   const scene   = $('#flashcard-scene');
 
-  // Flip ao clicar no card
+  // Flip ao clicar/tocar no card
   const doFlip = () => {
     state.flashcard.isFlipped = !state.flashcard.isFlipped;
     card.classList.toggle('flipped', state.flashcard.isFlipped);
   };
 
-  scene.addEventListener('click', doFlip);
-  // Suporte a teclado: espaço vira o card
-  scene.addEventListener('keydown', (e) => {
-    if (e.key === ' ' || e.key === 'Enter') doFlip();
-  });
   scene.setAttribute('tabindex', '0');
   scene.setAttribute('role', 'button');
-  scene.setAttribute('aria-label', 'Clique para revelar o significado');
+  scene.setAttribute('aria-label', 'Toque para revelar o significado');
+
+  // ── Lógica de toque separada para mobile ─────────────────────
+  // Usamos touchstart/touchend para detectar toque vs swipe sem
+  // conflito com o evento click (que em mobile tem delay de 300ms
+  // e pode ser bloqueado ou duplicado quando há touchend handler).
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchHandled = false; // flag para evitar que o click dispare depois
+
+  scene.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    touchHandled = false;
+  }, { passive: true });
+
+  scene.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    touchHandled = true;
+
+    // Swipe horizontal: navegar entre cards
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      if (dx < 0) $('#fc-btn-next').click(); // Swipe esquerda → próximo
+      else        $('#fc-btn-prev').click(); // Swipe direita → anterior
+      return;
+    }
+
+    // Toque simples (sem movimento significativo): virar o card
+    if (Math.abs(dx) < 15 && Math.abs(dy) < 15) {
+      doFlip();
+    }
+  }, { passive: true });
+
+  // Click para desktop (ignora se já foi tratado pelo touch)
+  scene.addEventListener('click', () => {
+    if (touchHandled) {
+      touchHandled = false;
+      return;
+    }
+    doFlip();
+  });
+
+  // Suporte a teclado: espaço/enter vira o card
+  scene.addEventListener('keydown', (e) => {
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      doFlip();
+    }
+  });
 
   // Próximo card
   $('#fc-btn-next').addEventListener('click', () => {
@@ -425,22 +513,6 @@ function initFlashcards() {
       renderFlashcard();
     });
   });
-
-  // Swipe para navegar (mobile)
-  let touchStartX = 0;
-  scene.addEventListener('touchstart', (e) => {
-    touchStartX = e.touches[0].clientX;
-  }, { passive: true });
-
-  scene.addEventListener('touchend', (e) => {
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    if (Math.abs(dx) > 60) {
-      if (dx < 0) $('#fc-btn-next').click(); // Swipe esquerda → próximo
-      else         $('#fc-btn-prev').click(); // Swipe direita → anterior
-    } else {
-      doFlip(); // Pequeno swipe = toque = vira
-    }
-  }, { passive: true });
 
   // Inicializar deck
   initFlashcardView();
@@ -690,6 +762,10 @@ function initNetworkStatus() {
 
 // ── INICIALIZAÇÃO GERAL ──────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+  // Exibir versão no header
+  const versionBadge = $('#version-badge');
+  if (versionBadge) versionBadge.textContent = `v${APP_VERSION}`;
+
   generateIcons();
   initNavigation();
   initDicionario();
