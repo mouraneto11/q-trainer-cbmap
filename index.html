@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- ============================================================
+       Q-Trainer CBMAP — 5º PEL APH CFSD 2026.2
+       Progressive Web App (PWA) | Vanilla JS | Mobile-First
+       ============================================================ -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Q-Trainer" />
+  <meta name="theme-color" content="#0a1628" />
+
+  <!-- SEO -->
+  <title>Q-Trainer | 5º PEL APH – CFSD 2026.2 CBMAP</title>
+  <meta name="description" content="Aplicativo de treinamento do Código Q para o 5º Pelotão de Atendimento Pré Hospitalar do CFSD 2026.2 – Corpo de Bombeiros Militar do Amapá." />
+  <meta name="keywords" content="Código Q, CBMAP, APH, CFSD, Bombeiros, Amapá, comunicação, rádio" />
+  <meta name="author" content="5º PEL APH CFSD 2026.2 CBMAP" />
+
+  <!-- Open Graph (compartilhamento social) -->
+  <meta property="og:title" content="Q-Trainer CBMAP – 5º PEL APH" />
+  <meta property="og:description" content="Treine os Códigos Q do CBMAP com Dicionário, Flashcards e Simulado." />
+  <meta property="og:type" content="website" />
+
+  <!-- PWA Manifest & Ícones -->
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" id="apple-touch-icon" />
+  <link rel="icon" type="image/png" href="icons/icon-192.png" id="favicon" />
+
+  <!-- Preconnect Google Fonts para performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+
+  <!-- ══════════════════════════════════════════════════════════
+       HEADER FIXO
+       ══════════════════════════════════════════════════════════ -->
+  <header class="app-header" role="banner">
+    <div class="header-logo">
+      <div class="header-emblem" aria-hidden="true">🚒</div>
+      <div class="header-text">
+        <div class="header-title">Q-Trainer</div>
+        <div class="header-subtitle">5º PEL APH · CFSD 2026.2 · CBMAP</div>
+      </div>
+    </div>
+    <div class="header-badge" aria-label="Modo Offline disponível">📡 OFFLINE</div>
+  </header>
+
+  <!-- ══════════════════════════════════════════════════════════
+       CONTEÚDO PRINCIPAL
+       ══════════════════════════════════════════════════════════ -->
+  <main class="app-main" role="main">
+
+    <!-- ─────────────────────────────────────────────────────────
+         TELA 1: DICIONÁRIO
+         ───────────────────────────────────────────────────────── -->
+    <section id="view-dicionario" class="view active" aria-label="Dicionário de Códigos Q">
+
+      <div class="section-header">
+        <h1 class="section-title">Dicionário</h1>
+        <p class="section-subtitle">Busque qualquer código ou significado</p>
+      </div>
+
+      <!-- Barra de busca -->
+      <div class="search-wrapper" role="search">
+        <span class="search-icon" aria-hidden="true"></span>
+        <input
+          type="search"
+          id="search-input"
+          class="search-input"
+          placeholder="Buscar código (ex: QSL) ou significado..."
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+          aria-label="Buscar códigos Q"
+        />
+        <button id="search-clear" class="search-clear" aria-label="Limpar busca">✕</button>
+      </div>
+
+      <!-- Estatística de resultados -->
+      <div class="stats-bar">
+        <div class="stat-chip">
+          <span id="code-count">0</span>
+          <span>códigos</span>
+        </div>
+        <div class="stat-chip">
+          <span></span>
+          <span>CBMAP / APH</span>
+        </div>
+      </div>
+
+      <!-- Lista de códigos -->
+      <div id="codes-list" class="codes-list" role="list" aria-live="polite" aria-label="Lista de códigos Q"></div>
+    </section>
+
+    <!-- ─────────────────────────────────────────────────────────
+         TELA 2: FLASHCARDS
+         ───────────────────────────────────────────────────────── -->
+    <section id="view-flashcards" class="view" aria-label="Flashcards de treino">
+
+      <div class="section-header">
+        <h2 class="section-title">Flashcards</h2>
+        <p class="section-subtitle">Toque no cartão para revelar · Deslize para navegar</p>
+      </div>
+
+      <div class="flashcard-wrapper">
+
+        <!-- Barra de progresso -->
+        <div class="flashcard-progress" role="progressbar" aria-label="Progresso do deck">
+          <span id="fc-current" class="progress-text">1</span>
+          <div class="progress-bar-wrap">
+            <div id="fc-progress-fill" class="progress-bar-fill" style="width: 0%"></div>
+          </div>
+          <span id="fc-total" class="progress-text">0</span>
+        </div>
+
+        <!-- Card 3D com flip -->
+        <div id="flashcard-scene" class="flashcard-scene">
+          <div id="flashcard" class="flashcard">
+
+            <!-- FRENTE: Código -->
+            <div class="card-face card-front" aria-hidden="false">
+              <span class="card-label">CÓDIGO Q</span>
+              <span id="card-front-code" class="card-code-big">QSL</span>
+              <span class="card-hint">
+                <span class="pulse-dot"></span>
+                Toque para revelar
+              </span>
+            </div>
+
+            <!-- VERSO: Significado -->
+            <div class="card-face card-back" aria-hidden="true">
+              <span id="card-back-code-label" class="card-back-code">QSL</span>
+              <span id="card-back-meaning" class="card-meaning-big">Entendido / Compreendido</span>
+              <span class="card-back-icon">✅</span>
+            </div>
+
+          </div><!-- /.flashcard -->
+        </div><!-- /.flashcard-scene -->
+
+        <!-- Modo de treino -->
+        <div class="mode-toggle" role="group" aria-label="Modo de treino">
+          <button class="mode-btn active" data-mode="code" id="mode-code">
+            Código → Significado
+          </button>
+          <button class="mode-btn" data-mode="meaning" id="mode-meaning">
+            Significado → Código
+          </button>
+        </div>
+
+        <!-- Controles -->
+        <div class="flashcard-controls">
+          <button id="fc-btn-prev" class="fc-btn fc-btn-prev" aria-label="Card anterior">
+            ← Anterior
+          </button>
+          <button id="fc-btn-shuffle" class="fc-btn fc-btn-shuffle" aria-label="Embaralhar deck" title="Embaralhar">
+            Aleatório
+          </button>
+          <button id="fc-btn-next" class="fc-btn fc-btn-next" aria-label="Próximo card">
+            Próximo →
+          </button>
+        </div>
+
+      </div><!-- /.flashcard-wrapper -->
+    </section>
+
+    <!-- ─────────────────────────────────────────────────────────
+         TELA 3: SIMULADO (QUIZ)
+         ───────────────────────────────────────────────────────── -->
+    <section id="view-quiz" class="view" aria-label="Simulado de múltipla escolha">
+
+      <div class="section-header">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <h2 class="section-title">Simulado</h2>
+            <p class="section-subtitle">Múltipla escolha — geradas aleatoriamente</p>
+          </div>
+          <button id="quiz-reset-btn" class="fc-btn fc-btn-shuffle" style="max-width:48px; height:48px;" aria-label="Reiniciar simulado" title="Reiniciar">
+            R
+          </button>
+        </div>
+      </div>
+
+      <div class="quiz-wrapper">
+
+        <!-- Placar -->
+        <div class="quiz-score-bar" role="status" aria-live="polite" aria-label="Placar do simulado">
+          <div class="score-pill correct">
+            <span id="score-correct">0</span>
+          </div>
+          <div class="score-pill wrong">
+            <span id="score-wrong">0</span>
+          </div>
+          <div class="score-pill total">
+            <span id="score-total">0</span>
+            <span>respondidas</span>
+          </div>
+          <div class="score-pill total">
+            <span id="score-pct">0%</span>
+          </div>
+        </div>
+
+        <!-- Pergunta -->
+        <div class="quiz-question-card" aria-live="polite" aria-label="Pergunta atual">
+          <div id="quiz-type-label" class="quiz-type-label">O que significa este código?</div>
+          <div id="quiz-question-text" class="quiz-question-text"></div>
+          <div id="quiz-code-display" class="quiz-code-display"></div>
+        </div>
+
+        <!-- Opções -->
+        <div id="quiz-options" class="quiz-options" role="group" aria-label="Opções de resposta"></div>
+
+        <!-- Feedback -->
+        <div id="quiz-feedback" class="quiz-feedback" role="alert" aria-live="assertive"></div>
+
+        <!-- Botão próxima pergunta -->
+        <button id="quiz-next-btn" class="quiz-next-btn" aria-label="Ir para próxima pergunta">
+          Nova Pergunta
+        </button>
+
+      </div><!-- /.quiz-wrapper -->
+    </section>
+
+  </main><!-- /.app-main -->
+
+  <!-- ══════════════════════════════════════════════════════════
+       BOTTOM NAVIGATION
+       ══════════════════════════════════════════════════════════ -->
+  <nav class="bottom-nav" role="navigation" aria-label="Navegação principal">
+    <button class="nav-btn active" data-view="dicionario" id="nav-dicionario" aria-label="Dicionário" aria-current="page">
+      <span class="nav-label">Dicionário</span>
+    </button>
+    <button class="nav-btn" data-view="flashcards" id="nav-flashcards" aria-label="Flashcards">
+      <span class="nav-label">Flashcards</span>
+    </button>
+    <button class="nav-btn" data-view="quiz" id="nav-quiz" aria-label="Simulado">
+      <span class="nav-label">Simulado</span>
+    </button>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════════════════
+       MODAL DE DETALHES (Bottom Sheet)
+       ══════════════════════════════════════════════════════════ -->
+  <div id="modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Detalhes do Código Q">
+    <div id="modal-card" class="modal-card">
+      <div class="modal-handle" aria-hidden="true"></div>
+      <button id="modal-close" class="modal-close" aria-label="Fechar">✕</button>
+      <div id="modal-code" class="modal-code">QSL</div>
+      <div id="modal-meaning" class="modal-meaning">Entendido / Compreendido</div>
+      <div class="modal-divider" aria-hidden="true"></div>
+      <div class="modal-usage-title">Exemplo de uso em rádio</div>
+      <div id="modal-usage" class="modal-usage-text"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TOAST NOTIFICATION
+       ══════════════════════════════════════════════════════════ -->
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       INSTALL BANNER (PWA)
+       ══════════════════════════════════════════════════════════ -->
+  <div id="install-banner" class="install-banner" role="complementary" aria-label="Instalar aplicativo">
+    <span class="install-icon" aria-hidden="true"></span>
+    <div class="install-text">
+      <strong>Instalar Q-Trainer</strong>
+      <span>Use offline na tela inicial!</span>
+    </div>
+    <div class="install-btn-wrap">
+      <button id="install-confirm-btn" class="install-btn primary" aria-label="Confirmar instalação">Instalar</button>
+      <button id="install-dismiss-btn" class="install-btn secondary" aria-label="Dispensar">Agora não</button>
+    </div>
+  </div>
+
+  <!-- Script principal -->
+  <script src="./app.js"></script>
+
+</body>
+</html>
