@@ -8,48 +8,52 @@ const APP_VERSION = '1.1.0'; // ← atualizar a cada deploy
 
 // ── BANCO DE DADOS DOS CÓDIGOS Q ────────────────────────────
 const codigoQ = [
-  { codigo: "QAP", significado: "Na escuta / Pronto para copiar",        uso: "Usado para indicar que a estação está na escuta e pronta para receber mensagens. Ex: 'QAP — Central, aguardando comunicação.'" },
-  { codigo: "QRA", significado: "Nome do operador ou da viatura",         uso: "Identifica a viatura ou operador em comunicação. Ex: 'QRA Alfa-01, Viatura de Resgate.'" },
-  { codigo: "QRB", significado: "Distância aproximada",                   uso: "Informa a distância até o local da ocorrência. Ex: 'QRB de 3 quilômetros da central.'" },
-  { codigo: "QRG", significado: "Frequência exata / Canal",               uso: "Indica a frequência ou canal de comunicação. Ex: 'Operar no QRG 2, canal tático.'" },
-  { codigo: "QRK", significado: "Qualidade da transmissão (1 a 5)",       uso: "Informa a inteligibilidade do sinal. Ex: 'QRK 4 — recebendo bem.'" },
-  { codigo: "QRL", significado: "Canal ocupado / Estação em operação",    uso: "Sinaliza que o canal está em uso. Ex: 'QRL — aguarde para transmitir.'" },
-  { codigo: "QRM", significado: "Interferência na transmissão",           uso: "Indica ruído ou interferência de outras transmissões. Ex: 'Muito QRM nessa frequência.'" },
-  { codigo: "QRN", significado: "Interferência atmosférica / Estática",   uso: "Indica interferência de origem natural (chuva, relâmpago). Ex: 'QRN alto na área.'" },
-  { codigo: "QRO", significado: "Aumentar potência de transmissão",       uso: "Solicita aumento de potência para melhorar o sinal. Ex: 'Faça QRO, sinal fraco.'" },
-  { codigo: "QRP", significado: "Diminuir potência de transmissão",       uso: "Solicita redução de potência. Ex: 'Pode fazer QRP, sinal forte aqui.'" },
-  { codigo: "QRR", significado: "Pronto para uso automático",             uso: "Indica que o equipamento está em modo automático de operação." },
-  { codigo: "QRS", significado: "Fale mais devagar",                      uso: "Solicita que o interlocutor reduza a velocidade da fala. Ex: 'Por favor, QRS — muito rápido.'" },
-  { codigo: "QRT", significado: "Parar a transmissão / Encerrar comunicação", uso: "Sinaliza o encerramento da comunicação. Ex: 'Central para Alfa-01, QRT por ora.'" },
-  { codigo: "QRU", significado: "Sem mensagens / Nada para transmitir",   uso: "Indica que não há mensagens pendentes. Ex: 'QRU — tudo em ordem.'" },
-  { codigo: "QRV", significado: "À disposição / Preparado",               uso: "Indica prontidão para receber ou executar. Ex: 'Alfa-01, QRV para a missão.'" },
-  { codigo: "QRX", significado: "Aguarde na linha / Tempo de pausa",      uso: "Solicita que a estação aguarde. Ex: 'QRX 5 minutos — verificando dados.'" },
-  { codigo: "QRZ", significado: "Quem está chamando?",                    uso: "Pergunta a identidade de quem transmitiu. Ex: 'QRZ? Identifique-se.'" },
-  { codigo: "QSA", significado: "Intensidade do sinal (1 a 5)",           uso: "Escala de intensidade do sinal recebido. Ex: 'QSA 3 — sinal médio.'" },
-  { codigo: "QSB", significado: "Sinal com variações / Fading",           uso: "Indica que o sinal está oscilando. Ex: 'Muito QSB nessa faixa.'" },
-  { codigo: "QSD", significado: "Transmissão incorreta / Defeituosa",     uso: "Indica problemas na qualidade da transmissão em código." },
-  { codigo: "QSJ", significado: "Dinheiro / Custo",                       uso: "Referência a valores monetários em comunicação. Ex: 'QSJ da operação foi coberto.'" },
-  { codigo: "QSL", significado: "Entendido / Compreendido",               uso: "Confirmação de recebimento. Ex: 'QSL, Central — mensagem recebida.'" },
-  { codigo: "QSM", significado: "Repita a mensagem",                      uso: "Solicita repetição da última mensagem. Ex: 'QSM — não compreendi.'" },
-  { codigo: "QSO", significado: "Comunicação direta entre estações",      uso: "Indica comunicação ponto a ponto. Ex: 'Estabelecer QSO com Bravo-02.'" },
-  { codigo: "QSP", significado: "Retransmitir mensagem",                  uso: "Pede retransmissão para outra estação. Ex: 'QSP para Charlie-03.'" },
-  { codigo: "QSS", significado: "Frequência de trabalho",                 uso: "Indica a frequência operacional em uso." },
-  { codigo: "QSW", significado: "Transmitir nesta frequência",            uso: "Instrução para operar na frequência indicada." },
-  { codigo: "QSX", significado: "Escutar outra estação / Frequência",     uso: "Solicita monitoramento de outra frequência ou estação." },
-  { codigo: "QSY", significado: "Mudar de frequência",                    uso: "Instrui a mudança de canal ou frequência. Ex: 'QSY para canal 3.'" },
-  { codigo: "QSZ", significado: "Transmitir cada palavra duas vezes",     uso: "Usado em condições de sinal ruim para garantir recepção." },
-  { codigo: "QTA", significado: "Cancelar última mensagem / Ocorrência cancelada", uso: "Anula a última comunicação enviada. Ex: 'QTA — ocorrência cancelada pelo solicitante.'" },
-  { codigo: "QTC", significado: "Mensagem / Ocorrência",                  uso: "Informa uma mensagem ou nova ocorrência. Ex: 'QTC para Alfa-01: vítima em via pública.'" },
-  { codigo: "QTH", significado: "Localização / Endereço atual",           uso: "Informa a posição atual da viatura. Ex: 'QTH: Rua das Flores, 100.'" },
-  { codigo: "QTI", significado: "Destino / A caminho de",                 uso: "Indica o deslocamento para um destino. Ex: 'QTI Hospital de Emergência.'" },
-  { codigo: "QTJ", significado: "Velocidade atual",                       uso: "Informa a velocidade de deslocamento da viatura." },
-  { codigo: "QTO", significado: "Ida ao banheiro / Pausa pessoal",        uso: "Sinaliza uma breve ausência pessoal. Ex: 'Central, QTO por 3 minutos.'" },
-  { codigo: "QTR", significado: "Horário exato",                          uso: "Solicita ou informa o horário oficial. Ex: 'QTR: 14h35 — todos sincronizem.' " },
-  { codigo: "QTV", significado: "Aguardando em vigilância",               uso: "Indica que a estação permanece em escuta vigilante." },
-  { codigo: "QTX", significado: "Permanecer em funcionamento",            uso: "Solicita que a estação mantenha comunicação aberta." },
-  { codigo: "QUA", significado: "Notícias de outra estação",              uso: "Solicita informações sobre estação específica." },
-  { codigo: "QAR", significado: "Desligar / Encerrar o serviço",          uso: "Encerra definitivamente o turno de operação. Ex: 'Alfa-01 — QAR. Fim do serviço.'" },
-  { codigo: "TKS", significado: "Obrigado (Thanks)",                      uso: "Agradecimento abreviado em comunicação. Ex: 'TKS pelo apoio, Central.'" }
+  { codigo: "QAP", significado: "Quando acionado, pronto",                prova: true,  uso: "Indica que a viatura ou operador está acionado e pronto para responder. Ex: 'Alfa-01 QAP — aguardando ordens.'" },
+  { codigo: "QAR", significado: "Desligar / Encerrar o serviço",                        uso: "Encerra definitivamente o turno de operação. Ex: 'Alfa-01 — QAR. Fim do serviço.'" },
+  { codigo: "QRA", significado: "Qual o nome do operador",                prova: true,  uso: "Identifica o operador em comunicação. Ex: 'QRA — Cabo Silva, Viatura de Resgate.'" },
+  { codigo: "QRB", significado: "Distância aproximada",                                 uso: "Informa a distância até o local da ocorrência. Ex: 'QRB de 3 quilômetros da central.'" },
+  { codigo: "QRD", significado: "Deslocamento",                           prova: true,  uso: "Informa que a viatura está em deslocamento para o local. Ex: 'Alfa-01 QRD para o endereço informado.'" },
+  { codigo: "QRE", significado: "Qual o horário estimado da chegada",     prova: true,  uso: "Pergunta ou informa o horário previsto de chegada ao destino. Ex: 'QRE? — Previsto em 10 minutos.'" },
+  { codigo: "QRG", significado: "Frequência exata / Canal",                             uso: "Indica a frequência ou canal de comunicação. Ex: 'Operar no QRG 2, canal tático.'" },
+  { codigo: "QRJ", significado: "Refeição em geral",                      prova: true,  uso: "Informa que o operador está em pausa para refeição. Ex: 'Central, Alfa-01 em QRJ por 30 minutos.'" },
+  { codigo: "QRK", significado: "Qualidade da transmissão (1 a 5)",                    uso: "Informa a inteligibilidade do sinal. Ex: 'QRK 4 — recebendo bem.'" },
+  { codigo: "QRL", significado: "Canal ocupado / Estação em operação",                 uso: "Sinaliza que o canal está em uso. Ex: 'QRL — aguarde para transmitir.'" },
+  { codigo: "QRM", significado: "Interferência na transmissão",                         uso: "Indica ruído ou interferência de outras transmissões. Ex: 'Muito QRM nessa frequência.'" },
+  { codigo: "QRN", significado: "Interferência atmosférica / Estática",                uso: "Indica interferência de origem natural (chuva, relâmpago). Ex: 'QRN alto na área.'" },
+  { codigo: "QRO", significado: "Aumentar potência de transmissão",                    uso: "Solicita aumento de potência para melhorar o sinal. Ex: 'Faça QRO, sinal fraco.'" },
+  { codigo: "QRP", significado: "Diminuir potência de transmissão",                    uso: "Solicita redução de potência. Ex: 'Pode fazer QRP, sinal forte aqui.'" },
+  { codigo: "QRR", significado: "Pronto para uso automático",                          uso: "Indica que o equipamento está em modo automático de operação." },
+  { codigo: "QRS", significado: "Fale mais devagar",                                   uso: "Solicita que o interlocutor reduza a velocidade da fala. Ex: 'Por favor, QRS — muito rápido.'" },
+  { codigo: "QRT", significado: "Parar a transmissão / Encerrar comunicação",          uso: "Sinaliza o encerramento da comunicação. Ex: 'Central para Alfa-01, QRT por ora.'" },
+  { codigo: "QRU", significado: "Negativo",                               prova: true,  uso: "Resposta negativa ou confirmação de que não há nada a transmitir. Ex: 'QRU — sem ocorrências na área.'" },
+  { codigo: "QRV", significado: "Prossiga!",                              prova: true,  uso: "Autoriza o prosseguimento da comunicação ou da missão. Ex: 'Central para Alfa-01: QRV, pode prosseguir.'" },
+  { codigo: "QRX", significado: "Aguarde",                                prova: true,  uso: "Solicita que a estação aguarde antes de transmitir. Ex: 'QRX — verificando dados no sistema.'" },
+  { codigo: "QRZ", significado: "Quem está chamando?",                                 uso: "Pergunta a identidade de quem transmitiu. Ex: 'QRZ? Identifique-se.'" },
+  { codigo: "QSA", significado: "Clareza do sinal — como me recebe? (1 a 5)", prova: true, uso: "Escala de clareza do sinal: 1-Péssimo, 2-Ruim, 3-Regular, 4-Bom, 5-Ótimo. Ex: 'QSA 4 — recebendo bem.'" },
+  { codigo: "QSB", significado: "Sinal com variações / Fading",                       uso: "Indica que o sinal está oscilando. Ex: 'Muito QSB nessa faixa.'" },
+  { codigo: "QSD", significado: "Transmissão incorreta / Defeituosa",                 uso: "Indica problemas na qualidade da transmissão em código." },
+  { codigo: "QSJ", significado: "Dinheiro / Coleta / Pagamento",          prova: true,  uso: "Referência a valores monetários em comunicação. Ex: 'QSJ da operação foi coberto pelo solicitante.'" },
+  { codigo: "QSL", significado: "Entendido / Compreendido",               prova: true,  uso: "Confirmação de recebimento. Ex: 'QSL, Central — mensagem recebida.'" },
+  { codigo: "QSM", significado: "Repita a mensagem",                      prova: true,  uso: "Solicita repetição da última mensagem. Ex: 'QSM — não compreendi, repita.'" },
+  { codigo: "QSO", significado: "Permissão para comunicar diretamente",   prova: true,  uso: "Solicita ou indica comunicação ponto a ponto direta entre estações. Ex: 'QSO com Bravo-02 autorizado.'" },
+  { codigo: "QSP", significado: "Permissão para ponte com outra estação", prova: true,  uso: "Solicita que uma estação intermédia retransmita a mensagem. Ex: 'QSP via Charlie-03 para Delta-04.'" },
+  { codigo: "QSS", significado: "Frequência de trabalho",                              uso: "Indica a frequência operacional em uso." },
+  { codigo: "QSW", significado: "Transmitir nesta frequência",                        uso: "Instrução para operar na frequência indicada." },
+  { codigo: "QSX", significado: "Escutar outra estação / Frequência",                 uso: "Solicita monitoramento de outra frequência ou estação." },
+  { codigo: "QSY", significado: "Mudar de frequência",                    prova: true,  uso: "Instrui a mudança de canal ou frequência. Ex: 'QSY para canal 3.'" },
+  { codigo: "QSZ", significado: "Transmitir cada palavra duas vezes",                 uso: "Usado em condições de sinal ruim para garantir recepção." },
+  { codigo: "QTA", significado: "Última mensagem / Cancelar ocorrência",  prova: true,  uso: "Anula ou cancela a última comunicação enviada. Ex: 'QTA — ocorrência cancelada pelo solicitante.'" },
+  { codigo: "QTC", significado: "Mensagem Geral",                         prova: true,  uso: "Informa uma mensagem ou nova ocorrência. Ex: 'QTC para Alfa-01: vítima em via pública.'" },
+  { codigo: "QTH", significado: "Qual endereço / Localização atual",      prova: true,  uso: "Informa ou solicita a posição atual da viatura. Ex: 'QTH: Rua das Flores, 100.'" },
+  { codigo: "QTI", significado: "Qual a sua localização exata",           prova: true,  uso: "Solicita ou informa a localização precisa da unidade. Ex: 'QTI? — Cruzamento da Av. Brasil com R. 7 de Setembro.'" },
+  { codigo: "QTJ", significado: "Velocidade atual",                                    uso: "Informa a velocidade de deslocamento da viatura." },
+  { codigo: "QTO", significado: "Ocorrência",                             prova: true,  uso: "Registra ou informa uma ocorrência em andamento. Ex: 'QTO — acidente de trânsito, dois feridos.'" },
+  { codigo: "QTR", significado: "Que horas são?",                         prova: true,  uso: "Solicita ou informa o horário oficial. Ex: 'QTR — 14h35, todos sincronizem.'" },
+  { codigo: "QTV", significado: "Aguardando em vigilância",                             uso: "Indica que a estação permanece em escuta vigilante." },
+  { codigo: "QTX", significado: "Permanecer em funcionamento",                         uso: "Solicita que a estação mantenha comunicação aberta." },
+  { codigo: "QUA", significado: "Notícias de outra estação",                           uso: "Solicita informações sobre estação específica." },
+  { codigo: "QVO", significado: "Ronda / Patrulhamento",                  prova: true,  uso: "Indica que a viatura está realizando ronda ou patrulhamento na área. Ex: 'Alfa-01 em QVO no setor Norte.'" },
+  { codigo: "TKS", significado: "Obrigado (Thanks)",                                   uso: "Agradecimento abreviado em comunicação. Ex: 'TKS pelo apoio, Central.'" }
 ];
 
 // ── ESTADO DA APLICAÇÃO ──────────────────────────────────────
@@ -228,8 +232,11 @@ function initNavigation() {
 function initDicionario() {
   const searchInput = $('#search-input');
   const clearBtn    = $('#search-clear');
-  const countEl    = $('#code-count');
+  const countEl     = $('#code-count');
   const list        = $('#codes-list');
+  const filterBtn   = $('#filter-prova-btn');
+
+  let soProva = false; // estado do filtro
 
   // Contador total
   if (countEl) countEl.textContent = codigoQ.length;
@@ -237,29 +244,45 @@ function initDicionario() {
   // Renderizar lista completa na inicialização
   renderCodeList(codigoQ, '');
 
+  // Função interna para aplicar busca + filtro juntos
+  function applyFilters() {
+    const query = searchInput.value.trim().toLowerCase();
+    let items = soProva ? codigoQ.filter((i) => i.prova) : [...codigoQ];
+    if (query) {
+      items = items.filter(
+        (item) =>
+          item.codigo.toLowerCase().includes(query) ||
+          item.significado.toLowerCase().includes(query)
+      );
+    }
+    renderCodeList(items, query);
+    if (countEl) countEl.textContent = items.length;
+  }
+
   // Evento de busca em tempo real
   searchInput.addEventListener('input', () => {
-    const query = searchInput.value.trim().toLowerCase();
-    clearBtn.classList.toggle('visible', query.length > 0);
-
-    const filtered = codigoQ.filter(
-      (item) =>
-        item.codigo.toLowerCase().includes(query) ||
-        item.significado.toLowerCase().includes(query)
-    );
-
-    renderCodeList(filtered, query);
-    if (countEl) countEl.textContent = filtered.length;
+    clearBtn.classList.toggle('visible', searchInput.value.trim().length > 0);
+    applyFilters();
   });
 
   // Botão de limpar busca
   clearBtn.addEventListener('click', () => {
     searchInput.value = '';
     clearBtn.classList.remove('visible');
-    renderCodeList(codigoQ, '');
-    if (countEl) countEl.textContent = codigoQ.length;
+    applyFilters();
     searchInput.focus();
   });
+
+  // Filtro Só Prova
+  if (filterBtn) {
+    filterBtn.addEventListener('click', () => {
+      soProva = !soProva;
+      filterBtn.classList.toggle('active', soProva);
+      filterBtn.setAttribute('aria-pressed', soProva);
+      applyFilters();
+      if (soProva) showToast(`⭐ ${codigoQ.filter((i) => i.prova).length} códigos da prova`);
+    });
+  }
 }
 
 function renderCodeList(items, query) {
@@ -277,17 +300,23 @@ function renderCodeList(items, query) {
 
   items.forEach((item) => {
     const div = document.createElement('div');
-    div.className = 'code-item';
+    div.className = item.prova ? 'code-item code-item-prova' : 'code-item';
     div.setAttribute('role', 'button');
     div.setAttribute('tabindex', '0');
     div.setAttribute('aria-label', `${item.codigo}: ${item.significado}`);
 
     const codigoHL  = highlight(item.codigo, query);
     const meaningHL = highlight(item.significado, query);
+    const provaBadge = item.prova
+      ? '<span class="prova-badge" title="Cobrado pelo instrutor">⭐ PROVA</span>'
+      : '';
 
     div.innerHTML = `
       <div class="code-badge">${codigoHL}</div>
-      <div class="code-meaning">${meaningHL}</div>
+      <div class="code-meaning-wrap">
+        <div class="code-meaning">${meaningHL}</div>
+        ${provaBadge}
+      </div>
       <span class="code-arrow">›</span>`;
 
     // Ripple effect
@@ -395,6 +424,12 @@ function renderFlashcard() {
     $('#card-back-code-label').style.display = 'none';
     $('#card-back-meaning').textContent  = item.codigo;
     $('#card-back-meaning').className    = 'card-code-big';
+  }
+
+  // Badge de prova no card
+  const provaBadge = $('#card-prova-badge');
+  if (provaBadge) {
+    provaBadge.style.display = item.prova ? 'flex' : 'none';
   }
 
   // Animação de entrada
@@ -509,7 +544,20 @@ function initFlashcards() {
     btn.addEventListener('click', () => {
       $$('.mode-btn').forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
-      state.flashcard.showMeaning = btn.dataset.mode === 'meaning';
+      const mode = btn.dataset.mode;
+      if (mode === 'prova') {
+        // Modo Prova: só cards marcados como prova
+        state.flashcard.showMeaning = false;
+        state.flashcard.provaMode   = true;
+        state.flashcard.deck  = shuffle(codigoQ.filter((i) => i.prova));
+        state.flashcard.index = 0;
+        showToast(`⭐ Modo Prova — ${state.flashcard.deck.length} códigos`);
+      } else {
+        state.flashcard.showMeaning = mode === 'meaning';
+        state.flashcard.provaMode   = false;
+        state.flashcard.deck  = shuffle([...codigoQ]);
+        state.flashcard.index = 0;
+      }
       renderFlashcard();
     });
   });

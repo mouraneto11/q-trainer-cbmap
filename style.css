@@ -345,11 +345,13 @@ body {
   background: var(--navy-400);
 }
 
-/* ── STATS BAR ─────────────────────────────────────────────── */
+/* ── STATS BAR ─────────────────────────────────────── */
 .stats-bar {
   display: flex;
+  align-items: center;
   gap: 8px;
   margin-bottom: 14px;
+  flex-wrap: wrap;
 }
 
 .stat-chip {
@@ -369,6 +371,37 @@ body {
   color: var(--blue-glow);
   font-size: 0.95rem;
   font-weight: 700;
+}
+
+/* Botão de filtro Prova */
+.prova-filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--warning);
+  cursor: pointer;
+  transition: var(--transition);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.prova-filter-btn:hover {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.5);
+}
+
+.prova-filter-btn.active {
+  background: rgba(245, 158, 11, 0.20);
+  border-color: var(--warning);
+  color: #fbbf24;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
 }
 
 /* ── DICIONÁRIO LIST ───────────────────────────────────────── */
@@ -460,6 +493,48 @@ body {
 .empty-state p {
   font-size: 0.9rem;
   font-weight: 500;
+}
+
+/* Código de prova — borda dourada e fundo levemente aquecido */
+.code-item-prova {
+  border-color: rgba(245, 158, 11, 0.30);
+  background: rgba(245, 158, 11, 0.04);
+}
+
+.code-item-prova::before {
+  background: linear-gradient(to bottom, var(--warning), #f97316);
+  opacity: 1;
+}
+
+.code-item-prova:hover,
+.code-item-prova:active {
+  background: rgba(245, 158, 11, 0.10);
+  border-color: rgba(245, 158, 11, 0.5);
+}
+
+/* Wrapper do significado + badge prova na lista */
+.code-meaning-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+/* Badge inline ⭐ PROVA na lista do dicionário */
+.prova-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: 10px;
+  padding: 2px 7px;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #fbbf24;
+  align-self: flex-start;
 }
 
 /* highlight de busca */
@@ -561,6 +636,31 @@ body {
   overflow: hidden;
   z-index: 2;
   transform: rotateY(0deg);
+}
+
+/* Badge ⭐ PROVA no topo do card (flashcard) */
+.card-prova-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(245, 158, 11, 0.18);
+  border: 1px solid rgba(245, 158, 11, 0.50);
+  border-radius: 12px;
+  padding: 3px 9px;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #fbbf24;
+  z-index: 3;
+  animation: provaPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes provaPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+  50%       { box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15); }
 }
 
 .card-label {
@@ -706,6 +806,7 @@ body {
   gap: 8px;
   width: 100%;
   max-width: 360px;
+  flex-wrap: wrap;
 }
 
 .mode-btn {
@@ -727,6 +828,20 @@ body {
   background: rgba(59,116,245,0.15);
   border-color: rgba(59,116,245,0.4);
   color: var(--blue-glow);
+}
+
+/* Modo Prova — botão com estilo dourado */
+.mode-btn-prova {
+  color: var(--warning);
+  border-color: rgba(245, 158, 11, 0.25);
+  background: rgba(245, 158, 11, 0.06);
+}
+
+.mode-btn-prova.active {
+  background: rgba(245, 158, 11, 0.18);
+  border-color: rgba(245, 158, 11, 0.55);
+  color: #fbbf24;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.20);
 }
 
 /* ── QUIZ ──────────────────────────────────────────────────── */

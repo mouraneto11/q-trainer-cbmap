@@ -86,7 +86,7 @@
         <button id="search-clear" class="search-clear" aria-label="Limpar busca">✕</button>
       </div>
 
-      <!-- Estatística de resultados -->
+      <!-- Estatística de resultados + Filtro Prova -->
       <div class="stats-bar">
         <div class="stat-chip">
           <span id="code-count">0</span>
@@ -96,6 +96,9 @@
           <span></span>
           <span>CBMAP / APH</span>
         </div>
+        <button id="filter-prova-btn" class="prova-filter-btn" aria-label="Filtrar códigos da prova" aria-pressed="false">
+          ⭐ Só Prova
+        </button>
       </div>
 
       <!-- Lista de códigos -->
@@ -129,6 +132,7 @@
 
             <!-- FRENTE: Código -->
             <div class="card-face card-front" aria-hidden="false">
+              <span id="card-prova-badge" class="card-prova-badge" style="display:none">⭐ PROVA</span>
               <span class="card-label">CÓDIGO Q</span>
               <span id="card-front-code" class="card-code-big">QSL</span>
               <span class="card-hint">
@@ -154,6 +158,9 @@
           </button>
           <button class="mode-btn" data-mode="meaning" id="mode-meaning">
             Significado → Código
+          </button>
+          <button class="mode-btn mode-btn-prova" data-mode="prova" id="mode-prova">
+            ⭐ Só Prova
           </button>
         </div>
 
