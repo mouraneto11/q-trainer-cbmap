@@ -100,103 +100,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// ── GERAÇÃO DINÂMICA DE ÍCONES (via Canvas) ─────────────────
-// Gera ícones via Canvas e injeta no manifest como blob URL
-// para que o browser possa validar o PWA e mostrar o banner de instalação
-function generateIcons() {
-  const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
-  const iconDataURLs = {};
 
-  sizes.forEach((size) => {
-    const canvas = document.createElement('canvas');
-    canvas.width = size;
-    canvas.height = size;
-    const ctx = canvas.getContext('2d');
-
-    // Fundo azul marinho
-    const bg = ctx.createLinearGradient(0, 0, size, size);
-    bg.addColorStop(0, '#152a5c');
-    bg.addColorStop(1, '#0a1628');
-    ctx.fillStyle = bg;
-    roundRect(ctx, 0, 0, size, size, size * 0.2);
-    ctx.fill();
-
-    // Círculo vermelho central
-    ctx.beginPath();
-    ctx.arc(size / 2, size / 2, size * 0.3, 0, Math.PI * 2);
-    ctx.fillStyle = '#e53e3e';
-    ctx.fill();
-
-    // Texto "Q"
-    ctx.fillStyle = '#ffffff';
-    ctx.font = `bold ${size * 0.32}px Arial`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('Q', size / 2, size / 2 + size * 0.02);
-
-    const dataURL = canvas.toDataURL('image/png');
-    iconDataURLs[size] = dataURL;
-
-    // Apple touch icon e favicon
-    if (size === 192) {
-      const link = document.querySelector("link[rel='apple-touch-icon']");
-      if (link) link.href = dataURL;
-      const favicon = document.querySelector("link[rel='icon']");
-      if (favicon) favicon.href = dataURL;
-    }
-  });
-
-  // Recriar o manifest com ícones em data URL e injetá-lo como blob
-  // Isso permite que o browser valide os ícones e ofereça instalação PWA
-  patchManifestWithIcons(iconDataURLs);
-}
-
-function patchManifestWithIcons(iconDataURLs) {
-  const manifestData = {
-    name: 'Q-Trainer CBMAP - 5º PEL APH',
-    short_name: 'Q-Trainer',
-    description: 'Treinamento do Código Q para o 5º Pelotão APH - CFSD 2026.2 CBMAP',
-    start_url: './',
-    display: 'standalone',
-    background_color: '#0a1628',
-    theme_color: '#0a1628',
-    orientation: 'portrait',
-    lang: 'pt-BR',
-    icons: Object.entries(iconDataURLs).map(([size, src]) => ({
-      src,
-      sizes: `${size}x${size}`,
-      type: 'image/png',
-      purpose: size >= 192 ? 'maskable any' : 'any',
-    })),
-    categories: ['education', 'utilities'],
-  };
-
-  const blob = new Blob([JSON.stringify(manifestData)], { type: 'application/manifest+json' });
-  const blobURL = URL.createObjectURL(blob);
-
-  // Substituir o link do manifest
-  let manifestLink = document.querySelector("link[rel='manifest']");
-  if (!manifestLink) {
-    manifestLink = document.createElement('link');
-    manifestLink.rel = 'manifest';
-    document.head.appendChild(manifestLink);
-  }
-  manifestLink.href = blobURL;
-}
-
-function roundRect(ctx, x, y, w, h, r) {
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.lineTo(x + w - r, y);
-  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-  ctx.lineTo(x + w, y + h - r);
-  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-  ctx.lineTo(x + r, y + h);
-  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-  ctx.lineTo(x, y + r);
-  ctx.quadraticCurveTo(x, y, x + r, y);
-  ctx.closePath();
-}
 
 // ── NAVEGAÇÃO POR ABAS ───────────────────────────────────────
 function initNavigation() {
@@ -762,45 +666,11 @@ function showToast(msg) {
   toastTimer = setTimeout(() => toast.classList.remove('show'), 2800);
 }
 
-// ── PWA INSTALL BANNER ───────────────────────────────────────
-let deferredInstallPrompt = null;
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredInstallPrompt = e;
-
-  // Mostrar banner personalizado após 3 segundos
-  setTimeout(() => {
-    $('#install-banner').classList.add('show');
-  }, 3000);
+// ── PWA INSTALL BANNER & MODAL ───────────────────────────────
+// ── PWA STATUS & EVENTOS NATIVOS ─────────────────────────────
+window.addEventListener('appinstalled', () => {
+  showToast('🎉 Q-Trainer instalado na sua Tela Inicial!');
 });
-
-function initInstallBanner() {
-  const banner    = $('#install-banner');
-  const installBtn = $('#install-confirm-btn');
-  const dismissBtn = $('#install-dismiss-btn');
-
-  installBtn.addEventListener('click', async () => {
-    if (!deferredInstallPrompt) return;
-    banner.classList.remove('show');
-    deferredInstallPrompt.prompt();
-    const { outcome } = await deferredInstallPrompt.userChoice;
-    console.log('[App] Resposta à instalação:', outcome);
-    deferredInstallPrompt = null;
-    if (outcome === 'accepted') showToast('App instalado com sucesso!');
-  });
-
-  dismissBtn.addEventListener('click', () => {
-    banner.classList.remove('show');
-  });
-
-  // Confirmar quando já instalado
-  window.addEventListener('appinstalled', () => {
-    banner.classList.remove('show');
-    showToast('Q-Trainer instalado!');
-    deferredInstallPrompt = null;
-  });
-}
 
 // ── STATUS OFFLINE/ONLINE ────────────────────────────────────
 function initNetworkStatus() {
@@ -814,13 +684,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const versionBadge = $('#version-badge');
   if (versionBadge) versionBadge.textContent = `v${APP_VERSION}`;
 
-  generateIcons();
   initNavigation();
   initDicionario();
   initFlashcards();
   initQuiz();
   initModal();
-  initInstallBanner();
   initNetworkStatus();
 
   console.log(`%c Q-Trainer CBMAP 🚒

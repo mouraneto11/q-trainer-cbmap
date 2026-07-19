@@ -26,8 +26,8 @@
 
   <!-- PWA Manifest & Ícones -->
   <link rel="manifest" href="./manifest.json" />
-  <link rel="apple-touch-icon" href="icons/icon-192.png" id="apple-touch-icon" />
-  <link rel="icon" type="image/png" href="icons/icon-192.png" id="favicon" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" id="apple-touch-icon" />
+  <link rel="icon" type="image/png" href="icons/favicon.png" id="favicon" />
 
   <!-- Preconnect Google Fonts para performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -50,8 +50,10 @@
         <div class="header-subtitle">5º PEL APH · CFSD 2026.2 · CBMAP</div>
       </div>
     </div>
-    <div class="header-badge" aria-label="Modo Offline disponível">📡 OFFLINE</div>
-    <div id="version-badge" class="header-version" aria-label="Versão do aplicativo"></div>
+    <div class="header-right">
+      <div class="header-badge" aria-label="Modo Offline disponível">📡 OFFLINE</div>
+      <div id="version-badge" class="header-version" aria-label="Versão do aplicativo"></div>
+    </div>
   </header>
 
   <!-- ══════════════════════════════════════════════════════════
@@ -273,21 +275,6 @@
        TOAST NOTIFICATION
        ══════════════════════════════════════════════════════════ -->
   <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
-
-  <!-- ══════════════════════════════════════════════════════════
-       INSTALL BANNER (PWA)
-       ══════════════════════════════════════════════════════════ -->
-  <div id="install-banner" class="install-banner" role="complementary" aria-label="Instalar aplicativo">
-    <span class="install-icon" aria-hidden="true"></span>
-    <div class="install-text">
-      <strong>Instalar Q-Trainer</strong>
-      <span>Use offline na tela inicial!</span>
-    </div>
-    <div class="install-btn-wrap">
-      <button id="install-confirm-btn" class="install-btn primary" aria-label="Confirmar instalação">Instalar</button>
-      <button id="install-dismiss-btn" class="install-btn secondary" aria-label="Dispensar">Agora não</button>
-    </div>
-  </div>
 
   <!-- Script principal -->
   <script src="./app.js"></script>

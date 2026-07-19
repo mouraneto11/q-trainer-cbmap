@@ -3,7 +3,7 @@
 // Estratégia: Cache-First para assets estáticos (offline 100%)
 // ============================================================
 
-const CACHE_NAME = 'q-trainer-cbmap-v1.0.0';
+const CACHE_NAME = 'q-trainer-cbmap-v1.1.0';
 
 // Lista de todos os arquivos que serão cacheados na instalação
 const ASSETS_TO_CACHE = [
@@ -12,7 +12,16 @@ const ASSETS_TO_CACHE = [
   './style.css',
   './app.js',
   './manifest.json',
-  // Ícones gerados via Canvas inline — não precisam de cache externo
+  './icons/favicon.png',
+  './icons/apple-touch-icon.png',
+  './icons/icon-72.png',
+  './icons/icon-96.png',
+  './icons/icon-128.png',
+  './icons/icon-144.png',
+  './icons/icon-152.png',
+  './icons/icon-192.png',
+  './icons/icon-384.png',
+  './icons/icon-512.png'
 ];
 
 // ── INSTALL: Cachear todos os assets no primeiro acesso ─────
